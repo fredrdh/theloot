@@ -2,8 +2,8 @@
   <v-app id="app">
     <v-app-bar app height="64">
       <v-toolbar-title class="headline text-uppercase">
-        <span>Booty Boi</span>
-        <span class="font-weight-light"> - PF 2e Treasure Generator</span>
+        <span>THE LOOT</span>
+        <span class="font-weight-light"> - T20 Treasure Generator</span>
 
       </v-toolbar-title>
       <i style="display: flex; flex: 1; text-align: right; justify-content: flex-end;"> v1.3</i>
@@ -24,7 +24,7 @@
          max="20"
          ticks
        ></v-slider>
-       <v-slider
+    <!--    <v-slider
           v-model="size"
 
           label="Party Size"
@@ -32,8 +32,8 @@
           thumb-label="always"
           max="20"
           ticks
-        ></v-slider>
-      <v-slider
+        ></v-slider> -->
+<!--       <v-slider
          v-model="xp"
          :color="color"
          label="XP Budget"
@@ -50,8 +50,8 @@
           step="10"
           thumb-label="always"
           max="500"
-        ></v-slider>
-        <v-slider
+        ></v-slider> -->
+<!--         <v-slider
            v-model="money_percentage"
            color="#00BFA5"
            hint="The amount of loot to be raw money vs magic items."
@@ -59,13 +59,13 @@
            step="5"
            thumb-label="always"
            max="100"
-         >
-         <template v-slot:thumb-label="{ value }">
+         > -->
+    <!--      <template v-slot:thumb-label="{ value }">
            {{ value }}/{{100-value}}
          </template>
-       </v-slider>
+       </v-slider> -->
 
-        <v-select
+<!--         <v-select
               v-model="typeSelected"
               :items="['consumable','permanent']"
               chips
@@ -87,7 +87,7 @@
           multiple
           small-chips
         >
-  </v-select>
+  </v-select> -->
 
       <v-btn color="primary" class="btn" @click="genloot">Generate</v-btn>
       <v-btn color="secondary" class="btn" @click="clear">Clear</v-btn>
@@ -97,7 +97,7 @@
       </div>
      </div>
     </v-content>
-    
+
   </v-app>
 
 </template>
@@ -111,7 +111,7 @@ import Loot from './components/Loot.vue'
 export default {
   name: 'app',
   data() {
-    
+
       return {
         ads_link: "https://udbaa.com/bnr_xload.php?section=General&pub=116515&format=468x60&ga=g&xt=168935386398630&xtt="+Math.round(Math.random() * 10000000),
         lootItems: [],
@@ -119,7 +119,7 @@ export default {
         xpbonus: 0,
         level: 1,
         size: 4,
-        money_percentage: 0,
+        money_percentage: 0.5,
         darkness: true,
         subTypes: ["Ammunition",
         "Apex",

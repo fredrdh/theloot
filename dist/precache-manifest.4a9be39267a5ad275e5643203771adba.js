@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "ads.txt"
   },
   {
-    "revision": "23b36253ca8afaa6b269",
+    "revision": "149a4999a26e4ef1ae9a",
     "url": "css/app.2aae8569.css"
   },
   {
@@ -20,12 +20,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "img/become_a_patron_button.png"
   },
   {
-    "revision": "e911a48d9e04eecfef3a9fc779f4c206",
+    "revision": "9fb4be5e1f17dd0a0078537ff3ee8d6f",
     "url": "index.html"
   },
   {
-    "revision": "23b36253ca8afaa6b269",
-    "url": "js/app.3c430535.js"
+    "revision": "149a4999a26e4ef1ae9a",
+    "url": "js/app.78af85c4.js"
   },
   {
     "revision": "de57d7874243acaec3d0",

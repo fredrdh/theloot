@@ -4,7 +4,7 @@ module.exports = {
     "vuetify"
   ],
   pwa:{
-    name:"Booty Boi",
+    name:"The Loot",
     manifestOptions: {
     display: 'fullscreen',
     background_color: '#303030'

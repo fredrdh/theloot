@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.32955cdcd2db3dec93f3a0815d36eb8d.js"
+  "precache-manifest.4a9be39267a5ad275e5643203771adba.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "booty-boi"});
+workbox.core.setCacheNameDetails({prefix: "the-loot"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {

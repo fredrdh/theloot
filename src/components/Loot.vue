@@ -1,12 +1,13 @@
 <template>
 <v-card class="loot">
-  <v-card-title class="v-title">Lvl {{ loot.level }} Loot [{{ loot.xp }} xp, {{ loot.size }} Players] <v-icon v-on:click="$emit('delete-loot',index)" class="delete">mdi-delete-forever</v-icon></v-card-title>
+  <v-card-text style="color:white"> <b>Lvl {{ loot.level }} Loot<!--  [{{ loot.xp }} xp, {{ loot.size }} Players] --></b> <v-icon v-on:click="$emit('delete-loot',index)" class="delete">mdi-delete-forever</v-icon></v-card-text>
+  <v-divider></v-divider>
   <v-card-text>
     <v-card v-if="loot.gold || loot.silver || loot.copper" class="item">
       <b>Money</b>
       <v-divider></v-divider>
       <div>
-        <span style="color:black;">
+        <span style="color:black">
           <div v-if="loot.gold" class="money-wrap">
             <b class="money-text">{{ loot.gold }}</b>
             <div class="v-icon money-icon notranslate mdi mdi-sack theme--dark" style="color:gold;"></div>
