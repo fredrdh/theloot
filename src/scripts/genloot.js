@@ -1,223 +1,227 @@
-// var xpbudget = 100;
-// var partysize = 4;
-// var partylevel = 1;
-import items from "./items.js";
-var lootGen = {
-  getLoots: function(xp, level, size, types, subTypes, money_percentage = 0) {
-    console.log(xp, level, size, types, subTypes, money_percentage);
-    var multiplier = xp / 100 / 10;
-    var partyTreasure = [
-      {},
-      {
-        total: 175,
-        adder: 10
-      },
-      {
-        total: 300,
-        adder: 18
-      },
-      {
-        total: 500,
-        adder: 30
-      },
-      {
-        total: 850,
-        adder: 50
-      },
-      {
-        total: 1350,
-        adder: 80
-      },
-      {
-        total: 2000,
-        adder: 125
-      },
-      {
-        total: 2900,
-        adder: 180
-      },
-      {
-        total: 4000,
-        adder: 250
-      },
-      {
-        total: 5700,
-        adder: 350
-      },
-      {
-        total: 8000,
-        adder: 500
-      },
-      {
-        total: 11500,
-        adder: 700
-      },
-      {
-        total: 16500,
-        adder: 1000
-      },
-      {
-        total: 25000,
-        adder: 1500
-      },
-      {
-        total: 36500,
-        adder: 2250
-      },
-      {
-        total: 54500,
-        adder: 3250
-      },
-      {
-        total: 82500,
-        adder: 5000
-      },
-      {
-        total: 128000,
-        adder: 75000
-      },
-      {
-        total: 208000,
-        adder: 12000
-      },
-      {
-        total: 355000,
-        adder: 20000
-      },
-      {
-        total: 490000,
-        adder: 35000
-      }
-    ];
+import { v4 as uuidv4 } from "uuid";
 
-    var amount =
-      partyTreasure[level].total * multiplier +
-      (size - 4) * partyTreasure[level].adder;
-    var raw_money = 0;
-    if (money_percentage > 0) {
-      raw_money = amount * (money_percentage / 100);
-      amount = amount - raw_money;
-    }
-    console.log(xp, level, size, multiplier, amount);
-    var item;
-    var loot = {
-      items: {}
-    };
-    do {
-      item = this.pickRandomLoot(level, types, subTypes, amount);
-      if (item) {
-        if (!loot.items[item.name]) {
-          loot.items[item.name] = {qty: 1, ...item};
-        } else {
-          loot.items[item.name].qty = loot.items[item.name].qty + 1;
-        }
+import DICE from "./DICE";
 
-        amount -= item.gp;
-      }
-    } while (item);
+// distribution is an array of objects that have at minimum a weight field.
+// the weights are expected to add up to 1
+function sampleWeightedDist(distribution) {
+  const rng = Math.random();
 
-    amount += raw_money;
-    loot.gold = Math.floor(amount);
-    amount = (amount - Math.floor(amount)) * 10;
-    loot.silver = Math.floor(amount);
-    amount = (amount - Math.floor(amount)) * 10;
-    loot.copper = Math.floor(amount);
-   loot.total = (
-      partyTreasure[level].total * multiplier +
-      (size  - 4) * partyTreasure[level].adder
-    ).toFixed(2);
-    return loot; //console.log(loot);
-  },
-
-  pickRandomLoot: function(level, types = [], subTypes = [], amount) {
-    if (level == 20) {
-      level = 19;
-    }
-
-    var itemPool = items.filter(i => {
-      if (i.level == level - 1 || i.level == level) {
-        var type = true;
-        var subType = true;
-        if (types.length > 0) {
-          type = types.indexOf(i.type) > -1;
-        }
-        if (subTypes.length > 0) {
-          subType = subTypes.indexOf(i.subType) > -1;
-        }
-        return type && subType;
-      }
-
-      return false;
-    });
-
-    if (
-      itemPool.sort((a, b) => a.gp - b.gp)[0].gp > amount ||
-      itemPool.length <= 0
-    ) {
-      return null;
-    }
-
-    return pickLoot(itemPool, amount);
-    //var nextLevelItems = items.filter(i=>i.level == level+1);
-
-    //
-    // var minSameLevelConsumables = items[level].consumables[0].gp;
-    // var minSameLevelPermanent = items[level].permanent[0].gp;
-    // var maxSameLevelConsumables = items[level].consumables[items[level].consumables.length - 1].gp;
-    // var maxSameLevelPermanent = items[level].permanent[items[level].permanent.length - 1].gp;
-    //
-    //
-    // var minNextLevelConsumables = items[level + 1].consumables[0].gp;
-    // var minNextLevelPermanent = items[level + 1].permanent[0].gp;
-    // var maxNextLevelConsumables = items[level + 1].consumables[items[level + 1].consumables.length - 1].gp;
-    // var maxNextLevelPermanent = items[level + 1].permanent[items[level + 1].permanent.length - 1].gp;
-    //
-    // var permanent = true;
-    //
-    // if (minSameLevelConsumables > amount && minNextLevelConsumables > amount)
-    // {
-    //   return null;
-    // }
-    //
-    // if (minSameLevelPermanent > amount && minNextLevelPermanent > amount)
-    // {
-    //   permanent = false;
-    // }
-    // else
-    // {
-    //   permanent = !!Math.round(Math.random());
-    // }
-    //
-    // if (permanent)
-    // {
-    //   if (minNextLevelPermanent > amount)
-    //   {
-    //     return pickLoot(level, 'permanent', amount)
-    //   }
-    //   else
-    //   {
-    //     return pickLoot(level + 1, 'permanent', amount)
-    //   }
-    // }
-    // else
-    // {
-    //   if (minNextLevelConsumables > amount)
-    //   {
-    //     return pickLoot(level, 'consumables', amount)
-    //   }
-    //   else
-    //   {
-    //     return pickLoot(level + 1, 'consumables', amount)
-    //   }
-    // }
-
-    function pickLoot(itemPool, amount) {
-      var item;
-      do {
-        item = itemPool[Math.round(Math.random() * (itemPool.length - 1))];
-      } while (amount < item.gp);
-      return item;
+  for (let i = 0; i < distribution.length - 1; i++) {
+    // if rng is gt current and less than next, return current
+    if (distribution[i].weight <= rng && rng < distribution[i + 1].weight) {
+      return distribution[i];
     }
   }
-};
-export default lootGen;
+
+  // otherwise, return last object
+  return distribution[distribution.length - 1];
+}
+
+// assumes distribution is an array with each object having a weight param
+function normalizeDistribution(distribution) {
+  const total = distribution.map(o => o.weight).reduce((t, c) => t + c, 0);
+
+  const normalized = [];
+  let currentThreshold = 0;
+  for (const origin of distribution) {
+    const normWeight = origin.weight / total;
+
+    normalized.push({
+      ...origin,
+      weight: currentThreshold,
+      originalWeight: origin.weight
+    });
+
+    currentThreshold += normWeight;
+  }
+  return normalized;
+}
+
+/**
+ * @param {Object} treasureRow Object containing the currency type, die size, die count, multiplier, and unit value (an int, assumed to be gp)
+ * @returns {Object} Object containing currency count, type, and unit value
+ */
+function rollTreasure(treasureRow) {
+  // roll based on die size
+  let count = 0;
+
+  // get dice int from string key
+  const dieSize = DICE[treasureRow.dieSize];
+  for (let i = 0; i < treasureRow.dieCount; i++) {
+    count += Math.floor(Math.random() * dieSize + 1); // +1 because we're one indexed here
+  }
+
+  // return the stuff
+  return {
+    count: count * treasureRow.multiplier,
+    type: treasureRow.type,
+    unitValue: treasureRow.unitValue
+  };
+}
+
+/**
+ *
+ * @param {Array} table Loot table to roll on
+ * @param {Object} itemTables All available item tables, indexed by table id
+ * @param {Object} items All available items, indexed by item name
+ * @param {Object} filters Filters object (format still tbd a little)
+ */
+function rollLoot(tableData, itemTables, items, filters) {
+  // first, roll on the overall table and get the line
+  // the loot table is just an array of objects, each of which has a weight
+  const table = tableData.table;
+  const row = sampleWeightedDist(normalizeDistribution(table));
+
+  // each row has a treasure field and a item tables field
+  const treasureRolls = [];
+
+  // tracker for aggregation
+  const liquidValue = {
+    TC: 0,
+    T$: 0,
+    TO: 0
+  };
+
+  // treasure is pretty easy, for each treasure entry, just roll it
+  // treasure is a sparse table (duplicates don't matter we sum it)
+  const treasureData = tableData.globalTreasure.concat(row.treasure);
+
+  for (const treasureRow of treasureData) {
+    const treasureRoll = rollTreasure(treasureRow);
+    treasureRolls.push(treasureRoll);
+
+    // check if aggregate should use the unit value
+    if (treasureRoll.type in liquidValue) {
+      liquidValue[treasureRoll.type] += treasureRoll.count;
+    } else {
+      liquidValue.gp += treasureRoll.count * treasureRoll.unitValue;
+    }
+  }
+
+  // then roll on the item tables, subject to the given filters
+  const itemList = [];
+  for (const itemRow of row.items) {
+    // first, check that the table exists
+    if (!(itemRow.itemTableId in itemTables)) {
+      continue;
+    }
+
+    // determine how many rolls we get
+    const dieSize = DICE[itemRow.dieSize];
+    let itemRolls = 0;
+    for (let i = 0; i < itemRow.dieCount; i++) {
+      itemRolls += Math.floor(Math.random() * dieSize + 1);
+    }
+
+    // filter the table
+    const filteredTable = itemTables[itemRow.itemTableId].filter(item => {
+      // filter out invalid items
+      if (!(item.id in items)) {
+        console.log(`Warning: ${item.id} not found in item list, excluding from sampling.`);
+        return false;
+      }
+
+      const itemInfo = items[item.id];
+
+      // if the item type is in the excluded item type list, we don't want it
+      if (filters.excludeType.includes(itemInfo.type)) {
+        return false;
+      } else if (filters.excludeId.includes(item.id)) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (filteredTable.length === 0) {
+      console.log(`No items left in table ${itemRow.itemTableId}, skipping...`);
+      continue;
+    }
+
+    const normalizedWeightTable = normalizeDistribution(filteredTable);
+
+    // roll it
+    for (let i = 0; i < itemRolls; i++) {
+      const itemResult = sampleWeightedDist(normalizedWeightTable);
+
+      // append to list of items
+      itemList.push({
+        itemId: itemResult.id,
+        type: items[itemResult.id].type,
+        meta: {
+          itemTable: itemRow.itemTableId,
+          rollNumber: i + 1
+        }
+      });
+    }
+  }
+
+  return {
+    treasure: treasureRolls,
+    items: itemList,
+    treasureValue: liquidValue,
+    selectedRow: row
+  };
+}
+
+/**
+ *
+ * @param {Object[]} rolls An array of objects containing the info needed to roll on a loot table.
+ * Each object contains a lootTableId (which maps to lootTables), a count (int), and an optional filters param (an object)
+ * @param {Object} lootTables Mapping from lootTableId to loot table object
+ * @param {Object} itemTables Mapping from itemTableId to item table object
+ * @param {Object} items List of items available, keyed by item name
+ */
+function lootGen(rolls, lootTables, itemTables, items) {
+  // each roll is stored in a separate line
+  // totals are computed at the end
+  const loot = [];
+
+  // for each roll on a table...
+  for (const roll of rolls) {
+    const tableId = roll.lootTableId;
+    // check that the table actually exists, cont. if not
+    if (!(tableId in lootTables)) {
+      console.log(`Loot Table ID ${tableId} not fount, skipping rolls...`);
+      continue;
+    }
+
+    // roll on the table roll.count number of times
+    for (let i = 0; i < roll.count; i++) {
+      const treasure = rollLoot(
+        lootTables[tableId],
+        itemTables,
+        items,
+        roll.filters
+      );
+
+      // append to loot, add some metadata
+      treasure.meta = {
+        rollNumber: i + 1,
+        table: tableId
+      };
+
+      loot.push(treasure);
+    }
+  }
+
+  // aggregate total value from treasureValue field
+  const totalValue = {
+    cp: 0,
+    sp: 0,
+    ep: 0,
+    gp: 0,
+    pp: 0
+  };
+
+  for (const lootRow of loot) {
+    for (const currency in totalValue) {
+      totalValue[currency] += lootRow.treasureValue[currency];
+    }
+  }
+
+  return { loot, totalValue, uuid: uuidv4() };
+}
+
+export { lootGen };
